@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">  
+
+<html xmlns="http://www.w3.org/1999/xhtml">  
+
+  <head>  
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+
+    <title>Pomodoro WebApp</title>  
+
+  </head>  
+
+  <body>  
+
+    <h1>To-do list</h1>  
+
+<form action="/task/new/" method="get">
+        <input type="submit" value="Create a new task">
+    </form> <br>
+
+Tasks are listed first by priority, then alphabetically.
+
+{% for task_dict in todo_listing %}  
+
+    <h2>{{ task_dict.task_object.title }}</h2> 
+
+<form action="/task/{{task_dict.pk }}/pom/" method="get">
+        <input type="submit" value="Start a Pomodoro">
+    </form>
+
+
+<form action="/task/{{ task_dict.pk }}/edit" method="get">
+        <input type="submit" value="Edit">
+    </form>
+
+<form action="/delete/{{ task_dict.pk }}" method="get">
+        <input type="submit" value="Delete">
+    </form>
+
+    Priority: {{ task_dict.priority }} <br>
+    Number of pomodoros left: {{ task_dict.pom_count }}  <br>
+
+{% endfor %}  
+
+
+  </body>  
+
+</html>
