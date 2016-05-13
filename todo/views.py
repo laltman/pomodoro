@@ -45,6 +45,15 @@ def delete(request, pk):
     task = get_object_or_404(Task, pk=pk).delete()
     return HttpResponseRedirect(reverse('todo.views.task_list'))
 
-#def pom(request, pk):
-   # task = task = get_object_or_404(Task, pk=pk)
-  #  return render(request, 'countdown.html', {'task': task})
+def pom(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    return render(request, 'timer.html', {'task': task}, context_instance = RequestContext(request))
+
+def complete(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    if task.pomnumber == 1:
+        task = get_object_or_404(Task, pk=pk).delete()
+    else:
+        task.pomnumber = task.pomnumber - 1
+        task.save()
+    return render(request, 'task_complete.html', {'task': task})

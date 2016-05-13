@@ -1,0 +1,41 @@
+﻿<HTML>
+<HEAD>
+<script>
+<!--
+/*Time limit script- JavaScript Kit (http://www.javascriptkit.com) Over 200+ free JavaScripts here!*/
+
+
+//enter limit in "minutes:seconds" Minutes should range from 0 to inifinity. Seconds should range from 0 to 59
+var limit="25:00"
+if (document.images){
+var parselimit=limit.split(":")
+parselimit=parselimit[0]*60+parselimit[1]*1
+}
+function begintimer(){
+if (!document.images)
+return
+if (parselimit==1)
+window.location="/task/{{ task.pk }}/complete"
+else{ 
+parselimit-=1
+curmin=Math.floor(parselimit/60)
+cursec=parselimit%60
+if (curmin!=0)
+curtime=curmin+" minutes and "+cursec+" seconds left"
+else
+curtime=cursec+" seconds left"
+window.status=curtime
+setTimeout("begintimer()",1000)
+}
+}
+//-->
+</script>
+</HEAD>
+
+<BODY>
+<body onLoad="begintimer()">
+<h1> Your 25-minute Pomodoro Timer has begun! Get to work! </h1>
+Check the status bar for your time remaining. You will be notified when the Pomodoro is completed.
+</BODY>
+
+</HTML>

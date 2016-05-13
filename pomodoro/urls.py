@@ -13,8 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 from django.contrib import admin
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -22,5 +24,6 @@ urlpatterns = [
     url(r'^task/new/$', 'todo.views.task_new'),
     url(r'^task/(?P<pk>\d+)/edit', 'todo.views.task_edit'),
     url(r'^delete/(?P<pk>\d+)', 'todo.views.delete'),
-    #url(r'^task/(?P<pk>\d+)/pom', 'todo.views.pom'),
+    url(r'^task/(?P<pk>\d+)/pom', 'todo.views.pom'),
+    url(r'^task/(?P<pk>\d+)/complete', 'todo.views.complete')
 ]
