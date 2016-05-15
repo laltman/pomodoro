@@ -1,41 +1,77 @@
 ﻿<HTML>
 <HEAD>
-<script>
-<!--
-/*Time limit script- JavaScript Kit (http://www.javascriptkit.com) Over 200+ free JavaScripts here!*/
+<script type="text/javascript">
 
+/***********************************************
 
-//enter limit in "minutes:seconds" Minutes should range from 0 to inifinity. Seconds should range from 0 to 59
+* JavaScript Image Clock- by JavaScript Kit (www.javascriptkit.com)
+* This notice must stay intact for usage
+* Visit JavaScript Kit at http://www.javascriptkit.com/ for this script and 100s more
+
+***********************************************/
 var limit="25:00"
 if (document.images){
 var parselimit=limit.split(":")
 parselimit=parselimit[0]*60+parselimit[1]*1
 }
-function begintimer(){
-if (!document.images)
-return
-if (parselimit==1)
-window.location="/task/{{ task.pk }}/complete"
-else{ 
-parselimit-=1
-curmin=Math.floor(parselimit/60)
-cursec=parselimit%60
-if (curmin!=0)
-curtime=curmin+" minutes and "+cursec+" seconds left"
-else
-curtime=cursec+" seconds left"
-window.status=curtime
-setTimeout("begintimer()",1000)
-}
-}
-//-->
+
+var imageclock=new Object()
+	//Enter path to clock digit images here, in order of 0-9, then "am/pm", then colon image:
+	imageclock.digits=["/static/images/c0.gif", "/static/images/c1.gif", "/static/images/c2.gif", "/static/images/c3.gif", "/static/images/c4.gif", "/static/images/c5.gif", "/static/images/c6.gif", "/static/images/c7.gif", "/static/images/c8.gif", "/static/images/c9.gif", "/static/images/cam.gif", "/static/images/cpm.gif", "/static/images/colon.gif"]
+	imageclock.instances=0
+	var preloadimages=[]
+	for (var i=0; i<imageclock.digits.length; i++){ //preload images
+		preloadimages[i]=new Image()
+		preloadimages[i].src=imageclock.digits[i]
+	}
+
+	imageclock.imageHTML=function(timestring){ //return timestring (ie: 1:56:38) into string of images instead
+		var sections=timestring.split(":")
+		if (sections[0]=="0") //If hour field is 0 (aka 12 AM)
+			sections[0]="12"
+		else if (sections[0]>=13)
+			sections[0]=sections[0]-12+""
+		for (var i=0; i<sections.length; i++){
+			if (sections[i].length==1)
+				sections[i]='<img src="'+imageclock.digits[0]+'" />'+'<img src="'+imageclock.digits[parseInt(sections[i])]+'" />'
+			else
+				sections[i]='<img src="'+imageclock.digits[parseInt(sections[i].charAt(0))]+'" />'+'<img src="'+imageclock.digits[parseInt(sections[i].charAt(1))]+'" />'
+		}
+		return sections[0]+'<img src="'+imageclock.digits[12]+'" />'+sections[1]+'<img src="'+imageclock.digits[12]+'" />'+sections[2]
+	}
+
+	imageclock.display=function(){
+		var clockinstance=this
+		this.spanid="clockspan"+(imageclock.instances++)
+		document.write('<span id="'+this.spanid+'"></span>')
+		this.update()
+		setInterval(function(){clockinstance.update()}, 1000)
+	}
+
+
+	imageclock.display.prototype.update=function(){
+		if (parselimit==0)
+			window.location="/task/{{ task.pk }}/complete"
+		else{
+			curmin=Math.floor(parselimit/60)
+			cursec=parselimit%60
+			var currenttime="00:"+ curmin +":"+ cursec //create time string
+			var currenttimeHTML=imageclock.imageHTML(currenttime)
+			document.getElementById(this.spanid).innerHTML=currenttimeHTML
+			parselimit-=1
+		}
+	}
+
 </script>
 </HEAD>
 
 <BODY>
-<body onLoad="begintimer()">
-<h1> Your 25-minute Pomodoro Timer has begun! Get to work! </h1>
-Check the status bar for your time remaining. You will be notified when the Pomodoro is completed.
+Your 25-minute Pomodoro Timer has begun. Get to work! </br>
+<script type="text/javascript">
+
+new imageclock.display()
+
+</script>
 </BODY>
 
 </HTML>
